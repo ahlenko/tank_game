@@ -12,6 +12,11 @@ public class MapGenerator : MonoBehaviour
     public TileBase[] sandRoadTile;
     public TileBase[] transitionRoadTile;
 
+    public TileBase[] bordersUniversal;
+    public TileBase[] bordersGrass;
+    public TileBase[] bordersSand;
+    public int borderIntensity = 3;
+
     [Header("Map Size")]
     public int width = 40;
     public int height = 40;
@@ -25,10 +30,12 @@ public class MapGenerator : MonoBehaviour
     [Header("Tilemap References")]
     public Tilemap groundTilemap;
     public Tilemap routeTilemap;
+    public Tilemap borderTilemap;
 
     private TileBase[,] groundMapVithoutTransitions;
     private TileBase[,] groundMap;
     private TileBase[,] routeMap;
+    private TileBase[,] borderMap;
     private int[,] groundType;
 
 
@@ -465,6 +472,116 @@ public class MapGenerator : MonoBehaviour
         Debug.Log($"Map generated! Seed: {seed}, Route tiles: {routeTilesPlaced}");
     }
 
+    private void GenerateBorders()
+    {
+        borderMap = new TileBase[width, height];
+
+        // one random universal tile for the outer frame
+        TileBase frameTile = GetRandomTile(bordersUniversal);
+
+        // border width based on intensity (0..10)
+        int maxBorder = Mathf.Clamp(borderIntensity, 0, 10);
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                bool isFrame = (x == 0 || y == 0 || x == width - 1 || y == height - 1);
+
+                // ---- 1. outer frame (always 1 tile wide, same tile)
+                if (isFrame)
+                {
+                    borderMap[x, y] = frameTile;
+                    continue;
+                }
+
+                // ---- 2. probabilistic borders inside the map
+                if (maxBorder <= 0) continue;
+
+                int chance = Random.Range(0, 50);
+                if (chance > maxBorder) continue;
+
+                // do not place biome borders on roads
+                if (routeMap[x, y] != null)
+                {
+                    TileBase roadBorder = GetRandomTile(bordersUniversal);
+                    if (roadBorder != null)
+                        borderMap[x, y] = roadBorder;
+                    continue;
+                }
+
+                int ground = groundType[x, y];
+
+                // choose biome border
+                TileBase chosen = null;
+
+                if (ground == 0)
+                {
+                    chosen = GetRandomTile(bordersGrass);
+                }
+                else
+                {
+                    chosen = GetRandomTile(bordersSand);
+                }
+
+                if (chosen == null)
+                    chosen = GetRandomTile(bordersUniversal);
+
+                if (chosen != null)
+                    borderMap[x, y] = chosen;
+
+                // ---- 3. make borders thicker (horizontal / vertical strips)
+                if (chosen != null && maxBorder > 3)
+                {
+                    int extend = Random.Range(1, maxBorder / 2 + 1);
+
+                    // horizontal strip
+                    if (Random.value > 0.5f)
+                    {
+                        for (int i = 1; i <= extend && x + i < width - 1; i++)
+                        {
+                            if (routeMap[x + i, y] == null)
+                                borderMap[x + i, y] = chosen;
+                        }
+                    }
+                    // vertical strip
+                    else
+                    {
+                        for (int i = 1; i <= extend && y + i < height - 1; i++)
+                        {
+                            if (routeMap[x, y + i] == null)
+                                borderMap[x, y + i] = chosen;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Places the generated route tiles onto the tilemap
+    private void PlaceBorderTiles()
+    {
+        borderTilemap.ClearAllTiles();
+
+        int borderTilesPlaced = 0;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                Vector3Int pos = new Vector3Int(x, y, 0);
+                TileBase tile = borderMap[x, y];
+                if (tile != null)
+                {
+                    borderTilemap.SetTile(pos, tile);
+                    borderTilesPlaced++;
+                }
+            }
+        }
+
+        Debug.Log($"Map generated! Seed: {seed}, Border tiles: {borderTilesPlaced}");
+    }
+
     public void GenerateMap()
     {
         InitializeSeed();
@@ -472,6 +589,8 @@ public class MapGenerator : MonoBehaviour
         PlaceGroundTiles();
         GenerateRoutes();
         PlaceRouteTiles();
+        GenerateBorders();
+        PlaceBorderTiles();
     }
 
     public void GenerateMapWithSeed(int newSeed)
