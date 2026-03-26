@@ -1,0 +1,51 @@
+name: tank_game
+description: "A new Flutter project."
+
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.7
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  get: ^4.7.2
+  uuid: ^4.5.1
+  bloc: ^9.0.0
+  get_it: ^8.0.2
+  shimmer: ^3.0.0
+  hive_ce: ^2.11.3
+  injectable: ^2.5.0
+  flutter_udid: ^4.0.0
+  json_annotation: ^4.9.0
+  overlay_support: ^2.1.0
+  freezed_annotation: ^3.1.0
+  flutter_screenutil: ^5.9.3
+  flutter_unity_widget: ^2022.2.1
+
+  firebase_core: any
+  cloud_firestore: any
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  build_runner: ^2.4.6
+  flutter_lints: ^6.0.0
+  hive_ce_generator: ^1.9.3
+  json_serializable: ^6.7.1
+  injectable_generator: ^2.1.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  windows: true
+  macos: true
+  android: true
+  ios: true
+  image_path: "assets/icon.jpg"
+
+flutter:
+  uses-material-design: true

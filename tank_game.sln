@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unity", "unity", "{F2F4A18A-13DA-A99B-7F1B-2CF93E0D20FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tanks_game", "tanks_game", "{49BBB8DC-D532-9F2C-C98C-6E42429F8DFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "unity\tanks_game\Assembly-CSharp.csproj", "{12A15811-0709-59CC-CAEC-97E7E203BA8F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12A15811-0709-59CC-CAEC-97E7E203BA8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12A15811-0709-59CC-CAEC-97E7E203BA8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12A15811-0709-59CC-CAEC-97E7E203BA8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12A15811-0709-59CC-CAEC-97E7E203BA8F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{49BBB8DC-D532-9F2C-C98C-6E42429F8DFB} = {F2F4A18A-13DA-A99B-7F1B-2CF93E0D20FA}
+		{12A15811-0709-59CC-CAEC-97E7E203BA8F} = {49BBB8DC-D532-9F2C-C98C-6E42429F8DFB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CE52DC1D-6CC4-46C6-8047-514C96017892}
+	EndGlobalSection
+EndGlobal
