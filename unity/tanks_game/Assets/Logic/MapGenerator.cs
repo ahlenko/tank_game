@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using System.Collections.Generic;
 
 public class MapGenerator : MonoBehaviour
 {
@@ -152,6 +153,7 @@ public class MapGenerator : MonoBehaviour
     private void PlaceGroundTiles()
     {
         groundTilemap.ClearAllTiles();
+        routeTilemap.ClearAllTiles();
 
         int groundTilesPlaced = 0;
 
@@ -175,11 +177,272 @@ public class MapGenerator : MonoBehaviour
     // Generates the main route from the left edge to the right edge of the map, ensuring it passes through both grass and sand biomes
     private void GenerateRoutes()
     {
+        routeMap = new TileBase[width, height];
+        HashSet<Vector2Int> roadCells = new HashSet<Vector2Int>();
 
+        // ---------------------------
+        // 1. Main road from left edge to right edge
+        // ---------------------------
+        Vector2Int start = new Vector2Int(0, Random.Range(0, height));
+        Vector2Int end = new Vector2Int(width - 1, Random.Range(0, height));
+
+        List<Vector2Int> mainPath = new List<Vector2Int> { start };
+        roadCells.Add(start);
+        Vector2Int current = start;
+        int maxSteps = width * height * 2;
+        int steps = 0;
+        while (current != end && steps < maxSteps)
+        {
+            steps++;
+            Vector2Int[] dirs = { Vector2Int.right, Vector2Int.up, Vector2Int.down };
+            List<Vector2Int> possibleMoves = new List<Vector2Int>();
+            List<float> weights = new List<float>();
+
+            foreach (var dir in dirs)
+            {
+                Vector2Int next = current + dir;
+                if (next.x >= 0 && next.x < width && next.y >= 0 && next.y < height && !roadCells.Contains(next))
+                {
+                    possibleMoves.Add(next);
+                    int newDistX = Mathf.Abs(next.x - end.x);
+                    int oldDistX = Mathf.Abs(current.x - end.x);
+                    if (newDistX < oldDistX)
+                        weights.Add(10f);
+                    else if (newDistX == oldDistX)
+                        weights.Add(5f);
+                    else
+                        weights.Add(1f);
+                }
+            }
+
+            if (possibleMoves.Count == 0)
+            {
+                // Stuck – try a different start (simple fallback: restart)
+                start = new Vector2Int(0, Random.Range(0, height));
+                end = new Vector2Int(width - 1, Random.Range(0, height));
+                roadCells.Clear();
+                mainPath.Clear();
+                current = start;
+                roadCells.Add(start);
+                mainPath.Add(start);
+                steps = 0;
+                continue;
+            }
+
+            // Choose a random move based on weights
+            int idx = 0;
+            float totalWeight = 0;
+            foreach (float w in weights) totalWeight += w;
+            float rand = Random.Range(0f, totalWeight);
+            float cumulative = 0;
+            for (int i = 0; i < possibleMoves.Count; i++)
+            {
+                cumulative += weights[i];
+                if (rand <= cumulative)
+                {
+                    idx = i;
+                    break;
+                }
+            }
+            Vector2Int nextPos = possibleMoves[idx];
+            roadCells.Add(nextPos);
+            mainPath.Add(nextPos);
+            current = nextPos;
+        }
+
+        // ---------------------------
+        // 2. Side roads from top and bottom edges
+        // ---------------------------
+
+        int topX = Random.Range(0, width);
+        int topY = height - 1;
+        for (int y = topY - 1; y >= 0; y--)
+        {
+            Vector2Int pos = new Vector2Int(topX, y);
+            if (roadCells.Contains(pos))
+            {
+                for (int yy = topY; yy > y; yy--)
+                {
+                    Vector2Int p = new Vector2Int(topX, yy);
+                    if (!roadCells.Contains(p))
+                    {
+                        roadCells.Add(p);
+                    }
+                }
+                break;
+            }
+        }
+
+        int bottomX = Random.Range(0, width);
+        int bottomY = 0;
+        for (int y = bottomY + 1; y < height; y++)
+        {
+            Vector2Int pos = new Vector2Int(bottomX, y);
+            if (roadCells.Contains(pos))
+            {
+                for (int yy = bottomY; yy < y; yy++)
+                {
+                    Vector2Int p = new Vector2Int(bottomX, yy);
+                    if (!roadCells.Contains(p))
+                    {
+                        roadCells.Add(p);
+                    }
+                }
+                break;
+            }
+        }
+
+        // ---------------------------
+        // 3. Determine road tile indices for each road cell
+        // ---------------------------
+        Vector2Int[] dirs4 = { Vector2Int.up, Vector2Int.down, Vector2Int.left, Vector2Int.right };
+
+        foreach (Vector2Int pos in roadCells)
+        {
+            List<Vector2Int> neighborDirs = new List<Vector2Int>();
+            foreach (Vector2Int dir in dirs4)
+            {
+                Vector2Int neighbor = pos + dir;
+                if (neighbor.x >= 0 && neighbor.x < width && neighbor.y >= 0 && neighbor.y < height && roadCells.Contains(neighbor))
+                {
+                    neighborDirs.Add(dir);
+                }
+            }
+
+            int count = neighborDirs.Count;
+            int tileIndex = -1;
+
+            if (count == 1)
+            {
+                Vector2Int dir = neighborDirs[0];
+                if (dir.x != 0)
+                    tileIndex = 6;
+                else
+                    tileIndex = 7;
+            }
+            else if (count == 2)
+            {
+                Vector2Int dirA = neighborDirs[0];
+                Vector2Int dirB = neighborDirs[1];
+
+                if ((dirA == Vector2Int.left && dirB == Vector2Int.right) ||
+                    (dirA == Vector2Int.right && dirB == Vector2Int.left))
+                {
+                    tileIndex = 6;
+                }
+                else if ((dirA == Vector2Int.up && dirB == Vector2Int.down) ||
+                         (dirA == Vector2Int.down && dirB == Vector2Int.up))
+                {
+                    tileIndex = 7;
+                }
+                else
+                {
+                    if ((dirA == Vector2Int.left && dirB == Vector2Int.up) ||
+                        (dirA == Vector2Int.up && dirB == Vector2Int.left))
+                        tileIndex = 2; // left turn
+                    else if ((dirA == Vector2Int.left && dirB == Vector2Int.down) ||
+                             (dirA == Vector2Int.down && dirB == Vector2Int.left))
+                        tileIndex = 0; // right turn
+                    else if ((dirA == Vector2Int.right && dirB == Vector2Int.up) ||
+                             (dirA == Vector2Int.up && dirB == Vector2Int.right))
+                        tileIndex = 3; // inverted left turn 
+                    else if ((dirA == Vector2Int.right && dirB == Vector2Int.down) ||
+                             (dirA == Vector2Int.down && dirB == Vector2Int.right))
+                        tileIndex = 1; // inverted right turn 
+                    else
+                        tileIndex = 6;
+                }
+            }
+            else if (count == 3)
+            {
+                bool hasLeft = false, hasRight = false, hasUp = false, hasDown = false;
+                foreach (var d in neighborDirs)
+                {
+                    if (d == Vector2Int.left) hasLeft = true;
+                    if (d == Vector2Int.right) hasRight = true;
+                    if (d == Vector2Int.up) hasUp = true;
+                    if (d == Vector2Int.down) hasDown = true;
+                }
+                if (!hasLeft) tileIndex = 8;   // T pointing right
+                else if (!hasUp) tileIndex = 10;    // T pointing up
+                else if (!hasDown) tileIndex = 9;  // T pointing down
+                else if (!hasRight) tileIndex = 11; // T pointing left
+            }
+            else if (count == 4)
+            {
+                tileIndex = 4;
+            }
+
+            if (tileIndex == -1) continue;
+
+            // ---------------------------
+            // 4. Choose correct tile array (grass, sand, or transition)
+            // ---------------------------
+            int ground = groundType[pos.x, pos.y]; // 0 = grass, 1 = sand
+            TileBase chosenTile = null;
+
+            bool isStraight = (count == 2 &&
+                               ((neighborDirs[0] == Vector2Int.left && neighborDirs[1] == Vector2Int.right) ||
+                                (neighborDirs[0] == Vector2Int.right && neighborDirs[1] == Vector2Int.left) ||
+                                (neighborDirs[0] == Vector2Int.up && neighborDirs[1] == Vector2Int.down) ||
+                                (neighborDirs[0] == Vector2Int.down && neighborDirs[1] == Vector2Int.up)));
+
+            if (isStraight)
+            {
+
+                Vector2Int roadDir = neighborDirs[0];
+                Vector2Int neighborPos = pos + roadDir;
+                int neighborGround = groundType[neighborPos.x, neighborPos.y];
+                if (ground != neighborGround)
+                {
+                    int transIndex = -1;
+                    if (roadDir == Vector2Int.right)
+                    {
+                        if (ground == 0 && neighborGround == 1) transIndex = 0;
+                        else if (ground == 1 && neighborGround == 0) transIndex = 6;
+                    }
+                    else if (roadDir == Vector2Int.left)
+                    {
+                        if (ground == 0 && neighborGround == 1) transIndex = 6;
+                        else if (ground == 1 && neighborGround == 0) transIndex = 0;
+                    }
+                    else if (roadDir == Vector2Int.up)
+                    {
+                        if (ground == 0 && neighborGround == 1) transIndex = 2;
+                        else if (ground == 1 && neighborGround == 0) transIndex = 4;
+                    }
+                    else if (roadDir == Vector2Int.down)
+                    {
+                        if (ground == 0 && neighborGround == 1) transIndex = 4;
+                        else if (ground == 1 && neighborGround == 0) transIndex = 2;
+                    }
+
+                    if (transIndex != -1 && transitionRoadTile != null && transitionRoadTile.Length > transIndex)
+                        chosenTile = transitionRoadTile[transIndex];
+                }
+            }
+
+            if (chosenTile == null)
+            {
+                if (ground == 0)
+                {
+                    if (grassRoadTile != null && tileIndex < grassRoadTile.Length)
+                        chosenTile = grassRoadTile[tileIndex];
+                }
+                else
+                {
+                    if (sandRoadTile != null && tileIndex < sandRoadTile.Length)
+                        chosenTile = sandRoadTile[tileIndex];
+                }
+            }
+
+            if (chosenTile != null)
+                routeMap[pos.x, pos.y] = chosenTile;
+        }
     }
 
     // Places the generated route tiles onto the tilemap
-    private void PlaceGroundTiles()
+    private void PlaceRouteTiles()
     {
         routeTilemap.ClearAllTiles();
 

@@ -525,16 +525,52 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0e43ae149cfdc4fedbaac613ebabe836, type: 2}
   - {fileID: 11400000, guid: fbd88652c709142d18bb70d2b5a40b2c, type: 2}
   - {fileID: 11400000, guid: fdd8429cb3cdb49ca96d59ca89febb6f, type: 2}
-  - {fileID: 11400000, guid: 1209f19dcb9694218a4067ba13fba1a0, type: 2}
-  - {fileID: 11400000, guid: b6845852e7cfa4d3282d2313c6a0dc5d, type: 2}
-  - {fileID: 11400000, guid: 7514b316333984cbf93fb901e470c2de, type: 2}
-  width: 28
-  height: 28
+  - {fileID: 11400000, guid: 0cdf43339c5634e5e84d1bc3b46eb885, type: 2}
+  - {fileID: 11400000, guid: f682e0b8681c44a63aab92888f672ef1, type: 2}
+  - {fileID: 11400000, guid: 4c2ce406210e64b40b00df213b156eae, type: 2}
+  grassRoadTile:
+  - {fileID: 11400000, guid: 7e68c4ae653ee4afc8a032c977a86037, type: 2}
+  - {fileID: 11400000, guid: 56bb73ed190b247af8fd73b5140562d9, type: 2}
+  - {fileID: 11400000, guid: df93d973b2466496bb673683e6050f5d, type: 2}
+  - {fileID: 11400000, guid: 0959d0381787e4eebadbba473ff19828, type: 2}
+  - {fileID: 11400000, guid: 4563e28f3914f42b983d03cd2300795c, type: 2}
+  - {fileID: 11400000, guid: 4e11080442818418ca96a20f99e11445, type: 2}
+  - {fileID: 11400000, guid: a1248c702df904218af026844579ae63, type: 2}
+  - {fileID: 11400000, guid: c34c9b05bd2d3409a957d706cb3429a9, type: 2}
+  - {fileID: 11400000, guid: 82d5eb51edfbb46f186353b6e72acf74, type: 2}
+  - {fileID: 11400000, guid: 233ae66a254e64efb9e9175796ced3d4, type: 2}
+  - {fileID: 11400000, guid: f5d6571d9ac0f4c7a948228cb6493889, type: 2}
+  - {fileID: 11400000, guid: b89cb278db0834b7d951764fcc44502b, type: 2}
+  sandRoadTile:
+  - {fileID: 11400000, guid: f5de534b7d47647b0b4fdcc68bc0353a, type: 2}
+  - {fileID: 11400000, guid: 0b30aedbe18ce44ed95287ed4318502e, type: 2}
+  - {fileID: 11400000, guid: 2b416546b980b4e3c86917078f64f5d3, type: 2}
+  - {fileID: 11400000, guid: f380ac2e0886d41208fb7cfc8c293c6e, type: 2}
+  - {fileID: 11400000, guid: b620e0ae65f1d423481201c1d35f3c96, type: 2}
+  - {fileID: 11400000, guid: 502e35c642c1446c59d3a79b7a425f7e, type: 2}
+  - {fileID: 11400000, guid: cf421b720efce4c8082245903ee177b6, type: 2}
+  - {fileID: 11400000, guid: de52849cccc734e7e9134b9e1727b24c, type: 2}
+  - {fileID: 11400000, guid: 64c70e1a76cfc480986b670edccacfdd, type: 2}
+  - {fileID: 11400000, guid: 71a069e4d281e43e9a915533ada13351, type: 2}
+  - {fileID: 11400000, guid: 1643aeb92d5d74773ada9ed29456c9a2, type: 2}
+  - {fileID: 11400000, guid: dd88585792b934e64aa5f1a78912f8be, type: 2}
+  transitionRoadTile:
+  - {fileID: 11400000, guid: 7e1c80012cbe0428aac6bd8d91af105c, type: 2}
+  - {fileID: 11400000, guid: fac65e94b8d10472bb7d7531e8e650fe, type: 2}
+  - {fileID: 11400000, guid: 97116085160424448af79b2362ce214d, type: 2}
+  - {fileID: 11400000, guid: a3de088415b5242adb611af825b0f867, type: 2}
+  - {fileID: 11400000, guid: 2ef7b035dd0aa47c29a147d46d189de1, type: 2}
+  - {fileID: 11400000, guid: 945fcdb67cf0548f5b6d4214fad92039, type: 2}
+  - {fileID: 11400000, guid: 51c1d240a9a2b4ccaaa25ecffe3c2563, type: 2}
+  - {fileID: 11400000, guid: d181217bc16944f50aa3827270813fe2, type: 2}
+  width: 18
+  height: 18
   seed: 0
   useRandomSeed: 1
-  grassNoiseScale: 0.2
-  grassThreshold: 0.7
+  grassNoiseScale: 0.1
+  grassThreshold: 0.5
   groundTilemap: {fileID: 1497533243}
+  routeTilemap: {fileID: 68317531}
 --- !u!4 &1483837069
 Transform:
   m_ObjectHideFlags: 0
