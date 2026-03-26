@@ -49,7 +49,9 @@
     <Analyzer Include="/Applications/Unity/Hub/Editor/6000.4.0f1/Unity.app/Contents/Resources/BuildPipeline/Unity.SourceGenerators/Unity.UIToolkit.SourceGenerator.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets/Logic/BulletController.cs" />
     <Compile Include="Assets/Logic/MapGenerator.cs" />
+    <Compile Include="Assets/Logic/PlayerMoveController.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

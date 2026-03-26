@@ -610,8 +610,6 @@ public class MapGenerator : MonoBehaviour
     void Update()
     {
 #if ENABLE_LEGACY_INPUT_MANAGER
-        if (Input.GetKeyDown(KeyCode.Space))
-            GenerateMap();
         if (Input.GetKeyDown(KeyCode.R))
         {
             useRandomSeed = true;
@@ -620,8 +618,6 @@ public class MapGenerator : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftControl))
             Debug.Log($"Current seed: {seed}");
 #elif ENABLE_INPUT_SYSTEM
-        if (UnityEngine.InputSystem.Keyboard.current.spaceKey.wasPressedThisFrame)
-            GenerateMap();
         if (UnityEngine.InputSystem.Keyboard.current.rKey.wasPressedThisFrame)
         {
             useRandomSeed = true;
