@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets/Logic/BulletController.cs" />
+    <Compile Include="Assets/Logic/BotTankController.cs" />
     <Compile Include="Assets/Logic/MapGenerator.cs" />
     <Compile Include="Assets/Logic/PlayerMoveController.cs" />
   </ItemGroup>
