@@ -161,7 +161,6 @@ public class PlayerMoveController : MonoBehaviour
         {
             lastShootTime = Time.time;
 
-            // Створення ефекту запуску
             if (shootEffectPrefab != null)
             {
                 Vector3 effectPos = transform.position + transform.up * shootEffectOffset;
@@ -171,7 +170,6 @@ public class PlayerMoveController : MonoBehaviour
                 StartCoroutine(ResetShootEffect(0.2f));
             }
 
-            // Створення снаряду зі зміщенням
             Vector3 bulletPos = transform.position + transform.up * shootEffectOffset;
             Instantiate(bulletPrefab, bulletPos, transform.rotation);
         }

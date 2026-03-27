@@ -32,6 +32,11 @@ public class MapGenerator : MonoBehaviour
     public Tilemap routeTilemap;
     public Tilemap borderTilemap;
 
+    [Header("Bot tanks to spawn")]
+    public int botCount = 5;
+    public GameObject botTankPrefab;
+
+
     private TileBase[,] groundMapVithoutTransitions;
     private TileBase[,] groundMap;
     private TileBase[,] routeMap;
@@ -475,33 +480,26 @@ public class MapGenerator : MonoBehaviour
     private void GenerateBorders()
     {
         borderMap = new TileBase[width, height];
-
-        // one random universal tile for the outer frame
         TileBase frameTile = GetRandomTile(bordersUniversal);
-
-        // border width based on intensity (0..10)
         int maxBorder = Mathf.Clamp(borderIntensity, 0, 10);
 
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                bool isFrame = (x == 0 || y == 0 || x == width - 1 || y == height - 1);
+                bool isFrame = x == 0 || y == 0 || x == width - 1 || y == height - 1;
 
-                // ---- 1. outer frame (always 1 tile wide, same tile)
                 if (isFrame)
                 {
                     borderMap[x, y] = frameTile;
                     continue;
                 }
 
-                // ---- 2. probabilistic borders inside the map
                 if (maxBorder <= 0) continue;
 
                 int chance = Random.Range(0, 50);
                 if (chance > maxBorder) continue;
 
-                // do not place biome borders on roads
                 if (routeMap[x, y] != null)
                 {
                     TileBase roadBorder = GetRandomTile(bordersUniversal);
@@ -512,7 +510,6 @@ public class MapGenerator : MonoBehaviour
 
                 int ground = groundType[x, y];
 
-                // choose biome border
                 TileBase chosen = null;
 
                 if (ground == 0)
@@ -530,12 +527,10 @@ public class MapGenerator : MonoBehaviour
                 if (chosen != null)
                     borderMap[x, y] = chosen;
 
-                // ---- 3. make borders thicker (horizontal / vertical strips)
                 if (chosen != null && maxBorder > 3)
                 {
                     int extend = Random.Range(1, maxBorder / 2 + 1);
 
-                    // horizontal strip
                     if (Random.value > 0.5f)
                     {
                         for (int i = 1; i <= extend && x + i < width - 1; i++)
@@ -544,7 +539,6 @@ public class MapGenerator : MonoBehaviour
                                 borderMap[x + i, y] = chosen;
                         }
                     }
-                    // vertical strip
                     else
                     {
                         for (int i = 1; i <= extend && y + i < height - 1; i++)
@@ -582,6 +576,17 @@ public class MapGenerator : MonoBehaviour
         Debug.Log($"Map generated! Seed: {seed}, Border tiles: {borderTilesPlaced}");
     }
 
+    private void SpawnBotTanks()
+    {
+        if (botTankPrefab == null)
+            return;
+
+        for (int i = 0; i < botCount; i++)
+        {
+            GameObject bot = Instantiate(botTankPrefab, Vector3.zero, Quaternion.identity);
+        }
+    }
+
     public void GenerateMap()
     {
         InitializeSeed();
@@ -591,6 +596,7 @@ public class MapGenerator : MonoBehaviour
         PlaceRouteTiles();
         GenerateBorders();
         PlaceBorderTiles();
+        SpawnBotTanks();
     }
 
     public void GenerateMapWithSeed(int newSeed)

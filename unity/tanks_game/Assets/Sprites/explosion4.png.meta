@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: c285591a996a04a509d846e1cb6421bd
+guid: 4e8c24070923144faa01676cb3f5d73a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -9080920321808081005
-    second: red_tank_0
+      213: 3399349080127232485
+    second: explosion4_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 86
+  spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -75,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: red_tank_0
+      name: explosion4_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 76
-        height: 100
+        width: 92
+        height: 90
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 39fd00184171af180800000000000000
-      internalID: -9080920321808081005
+      spriteID: 5e9d8845af9ec2f20800000000000000
+      internalID: 3399349080127232485
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      red_tank_0: -9080920321808081005
+      explosion4_0: 3399349080127232485
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
