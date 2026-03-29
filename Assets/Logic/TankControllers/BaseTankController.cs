@@ -39,6 +39,11 @@ public abstract class BaseTankController : MonoBehaviour
     public GameObject defeatBulletPrefab;
     public GameObject defeatEffectPrefab;
 
+    [Header("Audio")]
+    public AudioClip shootSound;
+    public AudioClip reloadSound;
+    protected AudioSource audioSource;
+
     protected Vector3 lastTrackPos;
     protected bool shootEffectActive = false;
     protected float lastShootTime = -Mathf.Infinity;
@@ -46,6 +51,11 @@ public abstract class BaseTankController : MonoBehaviour
     protected virtual void Start()
     {
         lastTrackPos = transform.position;
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     protected virtual void Update() { }
@@ -104,6 +114,16 @@ public abstract class BaseTankController : MonoBehaviour
 
         lastShootTime = Time.time;
 
+        if (audioSource != null && shootSound != null)
+        {
+            audioSource.PlayOneShot(shootSound);
+        }
+
+        if (reloadSound != null)
+        {
+            StartCoroutine(PlayReloadSound(shootCooldown));
+        }
+
         if (shootEffectPrefab != null)
         {
             Vector3 effectPos = transform.position + transform.up * shootEffectOffset;
@@ -129,5 +149,15 @@ public abstract class BaseTankController : MonoBehaviour
     protected virtual void OnDefeated()
     {
         Destroy(gameObject);
+    }
+
+    protected IEnumerator PlayReloadSound(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        if (audioSource != null && reloadSound != null && isPlayer)
+        {
+            audioSource.PlayOneShot(reloadSound);
+        }
     }
 }
