@@ -547,7 +547,7 @@ GameObject:
   - component: {fileID: 977738774}
   m_Layer: 0
   m_Name: BotTank2
-  m_TagString: Untagged
+  m_TagString: BotTank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -629,16 +629,19 @@ MonoBehaviour:
   spawnMin: {x: 16, y: 26}
   spawnMax: {x: 66, y: 2}
   centerSafeRadius: 18
+  rotationPivotOffset: 0.4
   bordersTilemap: {fileID: 1072479003}
   trackPrefab: {fileID: 1977747616656504569, guid: 59bd7e9d26bf44737a60b5ffae234cf0, type: 3}
   bulletPrefab: {fileID: 515126697152206333, guid: 6f3fd5b25a4044501a62d0014084ee11, type: 3}
   shootEffectPrefab: {fileID: 5939886250036760605, guid: 8ac4e1c2442094d038562c65306d1b41, type: 3}
   trackSpawnDistance: 0.2
-  trackLifetime: 2
+  trackLifetime: 2.04
   shootEffectOffset: 1
-  shootCooldown: 1.2
+  shootCooldown: 3
   defeatBulletPrefab: {fileID: 515126697152206333, guid: 1a3f48fc557dd490ba543ed7a252a1a6, type: 3}
   defeatEffectPrefab: {fileID: 798088625137041877, guid: cf8968bc77207417a819fe9ddbaa60c0, type: 3}
+  shootSound: {fileID: 8300000, guid: 120b1b1e81c964a559dd88f519667e9a, type: 3}
+  reloadSound: {fileID: 8300000, guid: 146586fd4e4334ef3a2be1288a2b52db, type: 3}
   player: {fileID: 1972848071}
   directionChangeInterval: 2.5
   shootRange: 8
@@ -835,7 +838,7 @@ TilemapRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_MaskInteraction: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -1196,7 +1199,7 @@ GameObject:
   - component: {fileID: 1512518201}
   m_Layer: 0
   m_Name: BotTank3
-  m_TagString: Untagged
+  m_TagString: BotTank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1278,16 +1281,19 @@ MonoBehaviour:
   spawnMin: {x: 16, y: 26}
   spawnMax: {x: 66, y: 2}
   centerSafeRadius: 18
+  rotationPivotOffset: 0.4
   bordersTilemap: {fileID: 1072479003}
   trackPrefab: {fileID: 1977747616656504569, guid: 59bd7e9d26bf44737a60b5ffae234cf0, type: 3}
   bulletPrefab: {fileID: 515126697152206333, guid: 6f3fd5b25a4044501a62d0014084ee11, type: 3}
   shootEffectPrefab: {fileID: 5939886250036760605, guid: 8ac4e1c2442094d038562c65306d1b41, type: 3}
   trackSpawnDistance: 0.2
-  trackLifetime: 2
+  trackLifetime: 2.04
   shootEffectOffset: 1
-  shootCooldown: 1.2
+  shootCooldown: 3
   defeatBulletPrefab: {fileID: 515126697152206333, guid: 1a3f48fc557dd490ba543ed7a252a1a6, type: 3}
   defeatEffectPrefab: {fileID: 798088625137041877, guid: cf8968bc77207417a819fe9ddbaa60c0, type: 3}
+  shootSound: {fileID: 8300000, guid: 120b1b1e81c964a559dd88f519667e9a, type: 3}
+  reloadSound: {fileID: 8300000, guid: 146586fd4e4334ef3a2be1288a2b52db, type: 3}
   player: {fileID: 1972848071}
   directionChangeInterval: 2.5
   shootRange: 8
@@ -1394,7 +1400,7 @@ GameObject:
   - component: {fileID: 1516662143}
   m_Layer: 0
   m_Name: BotTank4
-  m_TagString: Untagged
+  m_TagString: BotTank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1476,16 +1482,19 @@ MonoBehaviour:
   spawnMin: {x: 16, y: 26}
   spawnMax: {x: 66, y: 2}
   centerSafeRadius: 18
+  rotationPivotOffset: 0.4
   bordersTilemap: {fileID: 1072479003}
   trackPrefab: {fileID: 1977747616656504569, guid: 59bd7e9d26bf44737a60b5ffae234cf0, type: 3}
   bulletPrefab: {fileID: 515126697152206333, guid: 6f3fd5b25a4044501a62d0014084ee11, type: 3}
   shootEffectPrefab: {fileID: 5939886250036760605, guid: 8ac4e1c2442094d038562c65306d1b41, type: 3}
   trackSpawnDistance: 0.2
-  trackLifetime: 2
+  trackLifetime: 2.04
   shootEffectOffset: 1
-  shootCooldown: 1.2
+  shootCooldown: 3
   defeatBulletPrefab: {fileID: 515126697152206333, guid: 1a3f48fc557dd490ba543ed7a252a1a6, type: 3}
   defeatEffectPrefab: {fileID: 798088625137041877, guid: cf8968bc77207417a819fe9ddbaa60c0, type: 3}
+  shootSound: {fileID: 8300000, guid: 120b1b1e81c964a559dd88f519667e9a, type: 3}
+  reloadSound: {fileID: 8300000, guid: 146586fd4e4334ef3a2be1288a2b52db, type: 3}
   player: {fileID: 1972848071}
   directionChangeInterval: 2.5
   shootRange: 8
@@ -1589,6 +1598,7 @@ GameObject:
   - component: {fileID: 1972848072}
   - component: {fileID: 1972848074}
   - component: {fileID: 1972848075}
+  - component: {fileID: 1972848076}
   m_Layer: 0
   m_Name: Player Tank
   m_TagString: PlayerTank
@@ -1664,7 +1674,7 @@ Transform:
   m_GameObject: {fileID: 1972848071}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 40, y: 12, z: 0}
+  m_LocalPosition: {x: 41.75, y: 12.04, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1688,6 +1698,7 @@ MonoBehaviour:
   spawnMin: {x: 24, y: 18}
   spawnMax: {x: 58, y: 10}
   centerSafeRadius: 0
+  rotationPivotOffset: 0.13
   bordersTilemap: {fileID: 1072479003}
   trackPrefab: {fileID: 1977747616656504569, guid: 59bd7e9d26bf44737a60b5ffae234cf0, type: 3}
   bulletPrefab: {fileID: 515126697152206333, guid: 1a3f48fc557dd490ba543ed7a252a1a6, type: 3}
@@ -1695,10 +1706,11 @@ MonoBehaviour:
   trackSpawnDistance: 0.2
   trackLifetime: 2
   shootEffectOffset: 1
-  shootCooldown: 0.3
+  shootCooldown: 3
   defeatBulletPrefab: {fileID: 515126697152206333, guid: 6f3fd5b25a4044501a62d0014084ee11, type: 3}
   defeatEffectPrefab: {fileID: 798088625137041877, guid: cf8968bc77207417a819fe9ddbaa60c0, type: 3}
-  rotationPivotOffset: 0.13
+  shootSound: {fileID: 8300000, guid: 120b1b1e81c964a559dd88f519667e9a, type: 3}
+  reloadSound: {fileID: 8300000, guid: 146586fd4e4334ef3a2be1288a2b52db, type: 3}
   mainCamera: {fileID: 519420031}
 --- !u!61 &1972848075
 BoxCollider2D:
@@ -1734,7 +1746,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.009407043, y: -0.043725967}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1744,8 +1756,35 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.0697675, y: 1.255814}
+  m_Size: {x: 1.133316, y: 1.3208885}
   m_EdgeRadius: 0
+--- !u!50 &1972848076
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1972848071}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &343806716295306448
 GameObject:
   m_ObjectHideFlags: 0
@@ -1761,7 +1800,7 @@ GameObject:
   - component: {fileID: 5338583196056423005}
   m_Layer: 0
   m_Name: BotTank1
-  m_TagString: Untagged
+  m_TagString: BotTank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1843,16 +1882,19 @@ MonoBehaviour:
   spawnMin: {x: 16, y: 26}
   spawnMax: {x: 66, y: 2}
   centerSafeRadius: 18
+  rotationPivotOffset: 0.4
   bordersTilemap: {fileID: 1072479003}
   trackPrefab: {fileID: 1977747616656504569, guid: 59bd7e9d26bf44737a60b5ffae234cf0, type: 3}
   bulletPrefab: {fileID: 515126697152206333, guid: 6f3fd5b25a4044501a62d0014084ee11, type: 3}
   shootEffectPrefab: {fileID: 5939886250036760605, guid: 8ac4e1c2442094d038562c65306d1b41, type: 3}
   trackSpawnDistance: 0.2
-  trackLifetime: 2
+  trackLifetime: 2.04
   shootEffectOffset: 1
-  shootCooldown: 1.2
+  shootCooldown: 3
   defeatBulletPrefab: {fileID: 515126697152206333, guid: 1a3f48fc557dd490ba543ed7a252a1a6, type: 3}
   defeatEffectPrefab: {fileID: 798088625137041877, guid: cf8968bc77207417a819fe9ddbaa60c0, type: 3}
+  shootSound: {fileID: 8300000, guid: 120b1b1e81c964a559dd88f519667e9a, type: 3}
+  reloadSound: {fileID: 8300000, guid: 146586fd4e4334ef3a2be1288a2b52db, type: 3}
   player: {fileID: 1972848071}
   directionChangeInterval: 2.5
   shootRange: 8
