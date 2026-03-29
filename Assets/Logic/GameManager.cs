@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
 
     [Header("Stats")]
     public int botsKilled = 0;
-    private float startTime;
 
     void Awake()
     {
@@ -46,7 +45,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.Save();
 
         botsKilled = 0;
-        startTime = Time.time;
+        playerLives = 3;
         SetupGameScene();
     }
 
@@ -98,67 +97,173 @@ public class GameManager : MonoBehaviour
         else
             Debug.LogError("mapGeneratorPrefab not assigned in GameManager!");
 
-        startTime = Time.time;
+        UIManager.Instance.SetPlayerLives(playerLives);
+        UIManager.Instance.SetKilledCount(botsKilled);
+    }
+
+    public void SaveGame()
+    {
+        GameSave state = new GameSave
+        {
+            playerLives = playerLives,
+            botsKilled = botsKilled,
+            mapSeed = MapGenerator.Instance != null ? MapGenerator.Instance.seed : 0,
+            playerPosition = playerTank != null ? playerTank.transform.position : Vector3.zero,
+            playerRotation = playerTank != null ? playerTank.transform.rotation.eulerAngles.z : 0,
+            botCount = PlayerPrefs.GetInt("SelectedEnemyCount", 2),
+            enemies = new EnemyData[]
+            {
+                botTank1 != null ? new EnemyData { position = botTank1.transform.position, rotation = botTank1.transform.rotation.eulerAngles.z } : null,
+                botTank2 != null ? new EnemyData { position = botTank2.transform.position, rotation = botTank2.transform.rotation.eulerAngles.z } : null,
+                botTank3 != null ? new EnemyData { position = botTank3.transform.position, rotation = botTank3.transform.rotation.eulerAngles.z } : null,
+                botTank4 != null ? new EnemyData { position = botTank4.transform.position, rotation = botTank4.transform.rotation.eulerAngles.z } : null
+            }
+        };
+
+        string json = JsonUtility.ToJson(state);
+        string savePath = Application.persistentDataPath + "/save.json";
+        System.IO.File.WriteAllText(savePath, json);
+        UIManager.Instance.ShowMainUI();
     }
 
     public void ContinueGame()
     {
-        UIManager.Instance.DisableUI();
+        botsKilled = 0;
+        playerLives = 3;
+
         SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
+
+        string savePath = Application.persistentDataPath + "/save.json";
+        if (!System.IO.File.Exists(savePath))
+        {
+            Debug.LogWarning("No save file found.");
+            return;
+        }
+
+        string json = System.IO.File.ReadAllText(savePath);
+        GameSave state = JsonUtility.FromJson<GameSave>(json);
+
+        playerLives = state.playerLives;
+        botsKilled = state.botsKilled;
+
+        if (mapGeneratorPrefab != null)
+        {
+            mapGeneratorPrefab.SetActive(true);
+            var mapScripts = mapGeneratorPrefab.GetComponents<MonoBehaviour>();
+
+            if (MapGenerator.Instance != null)
+                MapGenerator.Instance.setMapSeed(state.mapSeed);
+        }
+
+        if (playerTank != null)
+        {
+            playerTank.SetActive(true);
+
+            var playerScripts = playerTank.GetComponents<MonoBehaviour>();
+            foreach (var script in playerScripts)
+            {
+                if (script is IInitializable init)
+                    init.InitializeWithPosition(state.playerPosition, state.playerRotation);
+            }
+        }
+
+        GameObject[] bots = { botTank1, botTank2, botTank3, botTank4 };
+        for (int i = 0; i < bots.Length; i++)
+        {
+            if (bots[i] != null && i < state.enemies.Length && state.enemies[i] != null)
+            {
+                bots[i].SetActive(true);
+
+                var botScripts = bots[i].GetComponents<MonoBehaviour>();
+                foreach (var script in botScripts)
+                {
+                    if (script is IInitializable init)
+                        init.InitializeWithPosition(state.enemies[i].position, state.enemies[i].rotation);
+                }
+            }
+            else if (bots[i] != null)
+            {
+                bots[i].SetActive(false);
+            }
+        }
+
+        // When user save game at the moment when some bots are defeated
+        if (bots.Length < state.botCount)
+        {
+            for (int i = bots.Length; i < state.botCount; i++)
+            {
+                if (bots[i] != null)
+                {
+                    bots[i].SetActive(true);
+
+                    var botScripts = bots[i].GetComponents<MonoBehaviour>();
+                    foreach (var script in botScripts)
+                    {
+                        if (script is IInitializable init)
+                            init.Initialize();
+                    }
+                }
+            }
+        }
+
+        UIManager.Instance.DisableUI();
+        UIManager.Instance.SetPlayerLives(playerLives);
+        UIManager.Instance.SetKilledCount(botsKilled);
     }
 
+    public void OnBotDefeated()
+    {
+        botsKilled++;
+        UIManager.Instance.SetKilledCount(botsKilled);
+    }
 
+    public void OnPlayerDefeated()
+    {
+        playerLives--;
+        UIManager.Instance.SetPlayerLives(playerLives);
+        if (playerLives > 0)
+        {
+            UIManager.Instance.ShowRespawnUI();
+        }
+        else
+        {
+            UIManager.Instance.ShowEndGameUI();
+        }
+    }
 
     public void ViewSave()
     {
         string savePath = Application.persistentDataPath + "/save.json";
         if (System.IO.File.Exists(savePath))
-            Application.OpenURL(savePath);
-    }
-
-    private void ShowMainMenu()
-    {
-
-        string savePath = Application.persistentDataPath + "/save.json";
-        bool hasSave = System.IO.File.Exists(savePath);
-    }
-
-    public float GetGameTime()
-    {
-        return Time.time - startTime;
-    }
-
-    public void BotKilled()
-    {
-        botsKilled++;
-    }
-
-    public void PlayerDefeated()
-    {
-        playerLives--;
-        if (playerLives > 0)
         {
-
-        }
-        else
-        {
-            GameOver();
+            string url = "file://" + savePath;
+            Application.OpenURL(url);
         }
     }
 
-    void GameOver()
-    {
-        // Показати екран завершення гри
-        // UIManager.Instance.ShowGameOver(botsKilled, GetGameTime());
-    }
-
-    public void SaveGame()
-    {
-
-    }
 
     public void RespawnPlayer()
     {
-        // Реалізуйте логіку респавну гравця
+        if (playerTank != null)
+        {
+            playerTank.SetActive(true);
+            var playerScripts = playerTank.GetComponents<MonoBehaviour>();
+            foreach (var script in playerScripts)
+            {
+                if (script is IInitializable init)
+                    init.Initialize();
+            }
+        }
+        else
+            Debug.LogError("playerTank not assigned in GameManager!");
+        UIManager.Instance.DisableUI();
+    }
+
+    public void EndGame()
+    {
+        UIManager.Instance.SetPlayerLives(3);
+        UIManager.Instance.SetKilledCount(0);
+        playerTank.SetActive(false);
+        UIManager.Instance.ShowMainUI();
     }
 }

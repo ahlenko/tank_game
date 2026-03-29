@@ -19,6 +19,13 @@ public class PlayerTankController : BaseTankController, IInitializable
         Spawn();
     }
 
+    public void InitializeWithPosition(Vector3 position, float rotation = 0f)
+    {
+        base.Start();
+        transform.position = position;
+        transform.rotation = Quaternion.Euler(0, 0, rotation);
+    }
+
     protected override void Start()
     {
         Initialize();
@@ -42,7 +49,7 @@ public class PlayerTankController : BaseTankController, IInitializable
 
     private void HandleRotation()
     {
-        if (shootEffectActive) return;
+        if (shootEffectActive || UIManager.Instance.gameOnPause) return;
 
         float rotate = 0f;
 
@@ -60,7 +67,7 @@ public class PlayerTankController : BaseTankController, IInitializable
 
     private void HandleMovement()
     {
-        if (shootEffectActive) return;
+        if (shootEffectActive || UIManager.Instance.gameOnPause) return;
 
         float move = 0f;
 
@@ -79,7 +86,7 @@ public class PlayerTankController : BaseTankController, IInitializable
 
     private void HandleShoot()
     {
-        if (bulletPrefab == null || shootEffectActive) return;
+        if (bulletPrefab == null || shootEffectActive || UIManager.Instance.gameOnPause) return;
 
         bool shoot = false;
 
@@ -104,14 +111,8 @@ public class PlayerTankController : BaseTankController, IInitializable
     {
         if (other.CompareTag("BotBullet"))
         {
-            Destroy(other.gameObject);
-            OnDefeated();
+            GameManager.Instance.OnPlayerDefeated();
+            SpawnDefeatEffect();
         }
-    }
-
-    protected override void OnDefeated()
-    {
-        SpawnDefeatEffect();
-        base.OnDefeated();
     }
 }

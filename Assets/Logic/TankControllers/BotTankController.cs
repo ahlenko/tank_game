@@ -27,11 +27,18 @@ public class BotTankController : BaseTankController, IInitializable
         Initialize();
     }
 
+    public void InitializeWithPosition(Vector3 position, float rotation = 0f)
+    {
+        base.Start();
+        transform.position = position;
+        transform.rotation = Quaternion.Euler(0, 0, rotation);
+    }
+
     protected override void Update()
     {
         base.Update();
 
-        if (isRespawning) return;
+        if (isRespawning || UIManager.Instance.gameOnPause) return;
 
         HandleMovement();
         HandleShoot();
@@ -107,18 +114,17 @@ public class BotTankController : BaseTankController, IInitializable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (isRespawning) return;
+        if (isRespawning || UIManager.Instance.gameOnPause) return;
 
-        if (other.transform == player)
-        {
-            Time.timeScale = 0f;
-            return;
-        }
 
         if (other.CompareTag("DefeatBullet"))
         {
             Destroy(other.gameObject);
             OnDefeated();
+        }
+        else if (other.CompareTag("PlayerTank"))
+        {
+            GameManager.Instance.OnPlayerDefeated();
         }
     }
 
@@ -131,6 +137,7 @@ public class BotTankController : BaseTankController, IInitializable
 
     private IEnumerator RespawnRoutine()
     {
+        GameManager.Instance.OnBotDefeated();
         yield return new WaitForSeconds(1f);
         Spawn();
         isRespawning = false;

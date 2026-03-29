@@ -1,9 +1,14 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+#endif
 
 public class MapGenerator : MonoBehaviour, IInitializable
+
 {
+    public static MapGenerator Instance;
     [Header("Ground Tiles")]
     public TileBase[] grassTile;
     public TileBase[] sandTile;
@@ -32,16 +37,18 @@ public class MapGenerator : MonoBehaviour, IInitializable
     public Tilemap routeTilemap;
     public Tilemap borderTilemap;
 
-    [Header("Bot tanks to spawn")]
-    public int botCount = 5;
-    public GameObject botTankPrefab;
-
-
     private TileBase[,] groundMapVithoutTransitions;
     private TileBase[,] groundMap;
     private TileBase[,] routeMap;
     private TileBase[,] borderMap;
     private int[,] groundType;
+
+    public void setMapSeed(int newSeed)
+    {
+        seed = newSeed;
+        useRandomSeed = false;
+        GenerateMap();
+    }
 
 
     private void InitializeSeed()
@@ -477,6 +484,8 @@ public class MapGenerator : MonoBehaviour, IInitializable
         Debug.Log($"Map generated! Seed: {seed}, Route tiles: {routeTilesPlaced}");
     }
 
+
+
     private void GenerateBorders()
     {
         borderMap = new TileBase[width, height];
@@ -576,16 +585,6 @@ public class MapGenerator : MonoBehaviour, IInitializable
         Debug.Log($"Map generated! Seed: {seed}, Border tiles: {borderTilesPlaced}");
     }
 
-    private void SpawnBotTanks()
-    {
-        if (botTankPrefab == null)
-            return;
-
-        for (int i = 0; i < botCount; i++)
-        {
-            GameObject bot = Instantiate(botTankPrefab, Vector3.zero, Quaternion.identity);
-        }
-    }
 
     public void GenerateMap()
     {
@@ -596,7 +595,6 @@ public class MapGenerator : MonoBehaviour, IInitializable
         PlaceRouteTiles();
         GenerateBorders();
         PlaceBorderTiles();
-        SpawnBotTanks();
     }
 
     public void GenerateMapWithSeed(int newSeed)
@@ -608,8 +606,14 @@ public class MapGenerator : MonoBehaviour, IInitializable
 
     public int GetCurrentSeed() => seed;
 
+    public void InitializeWithPosition(Vector3 position, float rotation = 0f)
+    {
+        return;
+    }
+
     public void Initialize()
     {
+        useRandomSeed = true;
         GenerateMap();
     }
 
@@ -621,21 +625,9 @@ public class MapGenerator : MonoBehaviour, IInitializable
     void Update()
     {
 #if ENABLE_LEGACY_INPUT_MANAGER
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            useRandomSeed = true;
-            GenerateMap();
-        }
-        if (Input.GetKeyDown(KeyCode.S) && Input.GetKey(KeyCode.LeftControl))
-            Debug.Log($"Current seed: {seed}");
+            if (Input.GetKeyDown(KeyCode.Escape)) UIManager.Instance.ShowPauseUI();
 #elif ENABLE_INPUT_SYSTEM
-        if (UnityEngine.InputSystem.Keyboard.current.rKey.wasPressedThisFrame)
-        {
-            useRandomSeed = true;
-            GenerateMap();
-        }
-        if (UnityEngine.InputSystem.Keyboard.current.sKey.wasPressedThisFrame && UnityEngine.InputSystem.Keyboard.current.ctrlKey.isPressed)
-            Debug.Log($"Current seed: {seed}");
+            if (Keyboard.current.escapeKey.wasPressedThisFrame) UIManager.Instance.ShowPauseUI();
 #endif
     }
 }

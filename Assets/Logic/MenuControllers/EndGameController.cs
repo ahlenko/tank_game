@@ -7,8 +7,7 @@ public class EndGameController : MonoBehaviour
 
     void Start()
     {
-
         goToMenuButton.onClick.RemoveAllListeners();
-        goToMenuButton.onClick.AddListener(() => UIManager.Instance.ShowMainUI());
+        goToMenuButton.onClick.AddListener(() => GameManager.Instance.EndGame());
     }
 }
