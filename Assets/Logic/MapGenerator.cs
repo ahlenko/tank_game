@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 
-public class MapGenerator : MonoBehaviour
+public class MapGenerator : MonoBehaviour, IInitializable
 {
     [Header("Ground Tiles")]
     public TileBase[] grassTile;
@@ -607,6 +607,11 @@ public class MapGenerator : MonoBehaviour
     }
 
     public int GetCurrentSeed() => seed;
+
+    public void Initialize()
+    {
+        GenerateMap();
+    }
 
     void Start()
     {

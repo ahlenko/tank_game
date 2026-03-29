@@ -119,7 +119,7 @@ public abstract class BaseTankController : MonoBehaviour
         if (defeatEffectPrefab != null)
         {
             GameObject effect = Instantiate(defeatEffectPrefab, transform.position, Quaternion.identity);
-            Destroy(effect, 0.5f);
+            Destroy(effect, 1f);
         }
     }
 

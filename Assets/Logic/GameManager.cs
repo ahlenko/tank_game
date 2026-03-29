@@ -18,13 +18,6 @@ public class GameManager : MonoBehaviour
     [Header("Map")]
     public GameObject mapGeneratorPrefab;
 
-    [Header("UI")]
-    public Canvas mainCanvas;
-    public Canvas enemiesCanvas;
-    public Canvas pauseCanvas;
-    public Canvas endGameCanvas;
-    public Canvas respownCanvas;
-
     [Header("Stats")]
     public int botsKilled = 0;
     private float startTime;
@@ -43,39 +36,18 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "Game")
-        {
-            SetupGameScene();
-        }
-        else if (scene.name == "Menu")
-        {
-            ShowMainMenu();
-        }
-    }
-
-    public void ShowEnemiesSelection()
-    {
-        if (mainCanvas != null) mainCanvas.gameObject.SetActive(false);
-        if (enemiesCanvas != null) enemiesCanvas.gameObject.SetActive(true);
-    }
 
     public void StartNewGame(int enemyCount)
     {
-        if (enemiesCanvas != null) enemiesCanvas.gameObject.SetActive(false);
+        UIManager.Instance.DisableUI();
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
 
-        SceneManager.LoadScene("Game");
         PlayerPrefs.SetInt("SelectedEnemyCount", enemyCount);
         PlayerPrefs.Save();
 
         botsKilled = 0;
         startTime = Time.time;
+        SetupGameScene();
     }
 
     private void SetupGameScene()
@@ -83,38 +55,59 @@ public class GameManager : MonoBehaviour
         int enemyCount = PlayerPrefs.GetInt("SelectedEnemyCount", 2);
 
         if (playerTank != null)
+        {
             playerTank.SetActive(true);
+            var playerScripts = playerTank.GetComponents<MonoBehaviour>();
+            foreach (var script in playerScripts)
+            {
+                if (script is IInitializable init)
+                    init.Initialize();
+            }
+        }
         else
             Debug.LogError("playerTank not assigned in GameManager!");
 
-        if (botTank2 != null) botTank2.SetActive(enemyCount >= 2);
-        if (botTank3 != null) botTank3.SetActive(enemyCount >= 3);
-        if (botTank4 != null) botTank4.SetActive(enemyCount >= 4);
+        void SetupBot(GameObject bot, int requiredCount)
+        {
+            if (bot == null) return;
+
+            bot.SetActive(enemyCount >= requiredCount);
+
+            var botScripts = bot.GetComponents<MonoBehaviour>();
+            foreach (var script in botScripts)
+            {
+                if (script is IInitializable init)
+                    init.Initialize();
+            }
+        }
+
+        SetupBot(botTank2, 2);
+        SetupBot(botTank3, 3);
+        SetupBot(botTank4, 4);
 
         if (mapGeneratorPrefab != null)
         {
-            Destroy(mapGeneratorPrefab);
-            Instantiate(mapGeneratorPrefab);
+            mapGeneratorPrefab.SetActive(true);
+            var mapScripts = mapGeneratorPrefab.GetComponents<MonoBehaviour>();
+            foreach (var script in mapScripts)
+            {
+                if (script is IInitializable init)
+                    init.Initialize();
+            }
         }
         else
-        {
             Debug.LogError("mapGeneratorPrefab not assigned in GameManager!");
-        }
 
         startTime = Time.time;
     }
 
     public void ContinueGame()
     {
-        if (System.IO.File.Exists(Application.persistentDataPath + "/save.json"))
-        {
-            SceneManager.LoadScene("Game");
-        }
-        else
-        {
-            Debug.Log("No save file found");
-        }
+        UIManager.Instance.DisableUI();
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName("Game"));
     }
+
+
 
     public void ViewSave()
     {
@@ -125,8 +118,6 @@ public class GameManager : MonoBehaviour
 
     private void ShowMainMenu()
     {
-        if (mainCanvas != null) mainCanvas.gameObject.SetActive(true);
-        if (enemiesCanvas != null) enemiesCanvas.gameObject.SetActive(false);
 
         string savePath = Application.persistentDataPath + "/save.json";
         bool hasSave = System.IO.File.Exists(savePath);
@@ -169,10 +160,5 @@ public class GameManager : MonoBehaviour
     public void RespawnPlayer()
     {
         // Реалізуйте логіку респавну гравця
-    }
-
-    public void GoToMenu()
-    {
-        SceneManager.LoadScene("Menu");
     }
 }

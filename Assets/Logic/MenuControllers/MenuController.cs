@@ -4,7 +4,6 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
-    public Canvas mainCanvas;
     public Button startButton;
     public Button continueButton;
     public Button quitButton;
@@ -20,10 +19,8 @@ public class MenuController : MonoBehaviour
         SetButtonTransparency(continueButton, hasSave);
         SetButtonTransparency(viewButton, hasSave);
 
-        mainCanvas.gameObject.SetActive(true);
-
         startButton.onClick.RemoveAllListeners();
-        startButton.onClick.AddListener(() => GameManager.Instance.ShowEnemiesSelection());
+        startButton.onClick.AddListener(() => UIManager.Instance.ShowEnemiesUI());
 
         continueButton.onClick.RemoveAllListeners();
         continueButton.onClick.AddListener(() => GameManager.Instance.ContinueGame());

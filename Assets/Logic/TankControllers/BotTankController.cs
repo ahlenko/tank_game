@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class BotTankController : BaseTankController
+public class BotTankController : BaseTankController, IInitializable
 {
     [Header("Target")]
     public GameObject player;
@@ -12,8 +12,9 @@ public class BotTankController : BaseTankController
 
     private float lastDirectionChange;
     private Quaternion targetRotation;
+    private bool isRespawning = false;
 
-    protected override void Start()
+    public void Initialize()
     {
         base.Start();
         Spawn();
@@ -21,9 +22,17 @@ public class BotTankController : BaseTankController
         targetRotation = transform.rotation;
     }
 
+    protected override void Start()
+    {
+        Initialize();
+    }
+
     protected override void Update()
     {
         base.Update();
+
+        if (isRespawning) return;
+
         HandleMovement();
         HandleShoot();
     }
@@ -98,6 +107,8 @@ public class BotTankController : BaseTankController
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (isRespawning) return;
+
         if (other.transform == player)
         {
             Time.timeScale = 0f;
@@ -113,15 +124,15 @@ public class BotTankController : BaseTankController
 
     protected override void OnDefeated()
     {
+        isRespawning = true;
         SpawnDefeatEffect();
-        Destroy(gameObject);
         StartCoroutine(RespawnRoutine());
     }
 
     private IEnumerator RespawnRoutine()
     {
         yield return new WaitForSeconds(1f);
-        GameObject newBot = Instantiate(gameObject);
-        newBot.GetComponent<BotTankController>().Spawn();
+        Spawn();
+        isRespawning = false;
     }
 }

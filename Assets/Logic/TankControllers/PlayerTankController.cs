@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 using UnityEngine.InputSystem;
 #endif
 
-public class PlayerTankController : BaseTankController
+public class PlayerTankController : BaseTankController, IInitializable
 {
     [Header("Rotation Pivot")]
     public float rotationPivotOffset = 0.4f;
@@ -13,10 +13,15 @@ public class PlayerTankController : BaseTankController
     [Header("Camera")]
     public Camera mainCamera;
 
-    protected override void Start()
+    public void Initialize()
     {
         base.Start();
         Spawn();
+    }
+
+    protected override void Start()
+    {
+        Initialize();
     }
 
     protected override void Update()
