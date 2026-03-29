@@ -108,6 +108,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BulletProjectile
   speed: 12
   maxDistance: 10
+  bordersTilemap: {fileID: 0}
+  defeatEffectPrefab: {fileID: 798088625137041877, guid: cf8968bc77207417a819fe9ddbaa60c0, type: 3}
 --- !u!70 &7119059758522566685
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
