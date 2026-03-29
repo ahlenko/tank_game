@@ -54,11 +54,12 @@ public class BotTankController : MonoBehaviour
 
     void Update()
     {
-        if (player == null)
-            return;
-
         HandleMovement();
-        HandleShoot();
+
+        if (player != null)
+        {
+            HandleShoot();
+        }
     }
 
     void SpawnRandomEdge()
@@ -194,10 +195,8 @@ public class BotTankController : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log("OnTriggerEnter2D hit: " + other.name);
         if (other.transform == player)
         {
-            Debug.Log("Player defeated");
             Time.timeScale = 0f;
             return;
         }
@@ -212,7 +211,6 @@ public class BotTankController : MonoBehaviour
 
             Destroy(other.gameObject);
 
-            // Respawn new bot before destroying current to prevent self-destroy issues
             GameObject newBot = Instantiate(gameObject);
             newBot.GetComponent<BotTankController>().SpawnRandomEdge();
 

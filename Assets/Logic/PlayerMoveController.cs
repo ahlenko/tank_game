@@ -36,6 +36,10 @@ public class PlayerMoveController : MonoBehaviour
     public float shootCooldown = 0.5f;
     private float lastShootTime = -Mathf.Infinity;
 
+    [Header("Defeat bullet")]
+    public GameObject defeatBulletPrefab;
+    public GameObject defeatEffectPrefab;
+
     private Vector3 lastTrackPos;
 
     private bool shootEffectActive = false;
@@ -172,6 +176,21 @@ public class PlayerMoveController : MonoBehaviour
 
             Vector3 bulletPos = transform.position + transform.up * shootEffectOffset;
             Instantiate(bulletPrefab, bulletPos, transform.rotation);
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("BotBullet"))
+        {
+            if (defeatEffectPrefab != null)
+            {
+                GameObject effect = Instantiate(defeatEffectPrefab, transform.position, Quaternion.identity);
+                Destroy(effect, 0.5f);
+            }
+
+            Destroy(other.gameObject);
+            Destroy(gameObject);
         }
     }
 
