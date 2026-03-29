@@ -9,7 +9,7 @@ public class PauseController : MonoBehaviour
     void Start()
     {
         continueGameButton.onClick.RemoveAllListeners();
-        continueGameButton.onClick.AddListener(() => GameManager.Instance.ContinueGame());
+        continueGameButton.onClick.AddListener(() => GameManager.Instance.ContinuePlay());
 
         saveGameButton.onClick.RemoveAllListeners();
         saveGameButton.onClick.AddListener(() => GameManager.Instance.SaveGame());

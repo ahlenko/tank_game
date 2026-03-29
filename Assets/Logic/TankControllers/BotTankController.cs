@@ -90,7 +90,7 @@ public class BotTankController : BaseTankController, IInitializable
     private void RotateTowardsPlayer()
     {
         if (player == null) return;
-        Vector3 dir = player.transform.position - transform.position;
+        Vector3 dir = player.transform.position - transform.position * rotationPivotOffset;
         float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg - 90f;
         targetRotation = Quaternion.Euler(0, 0, targetAngle);
     }
@@ -121,10 +121,6 @@ public class BotTankController : BaseTankController, IInitializable
         {
             Destroy(other.gameObject);
             OnDefeated();
-        }
-        else if (other.CompareTag("PlayerTank"))
-        {
-            GameManager.Instance.OnPlayerDefeated();
         }
     }
 

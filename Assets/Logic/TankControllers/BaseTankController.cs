@@ -16,6 +16,9 @@ public abstract class BaseTankController : MonoBehaviour
     public Vector2 spawnMax;
     public float centerSafeRadius = 15f;
 
+    [Header("Rotation Pivot")]
+    public float rotationPivotOffset = 0.4f;
+
     [Header("Navigation")]
     public Tilemap bordersTilemap;
 

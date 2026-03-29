@@ -1,20 +1,23 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.Tilemaps;
+using System.ComponentModel;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
 public class PlayerTankController : BaseTankController, IInitializable
 {
-    [Header("Rotation Pivot")]
-    public float rotationPivotOffset = 0.4f;
+
 
     [Header("Camera")]
     public Camera mainCamera;
 
+    private bool isRespawning = false;
+
     public void Initialize()
     {
+        isRespawning = false;
         base.Start();
         Spawn();
     }
@@ -38,6 +41,21 @@ public class PlayerTankController : BaseTankController, IInitializable
         HandleMovement();
         HandleShoot();
         UpdateCamera();
+
+        foreach (var bot in GameObject.FindGameObjectsWithTag("BotTank"))
+        {
+
+            if (Vector2.Distance(transform.position, bot.transform.position) < 1f)
+            {
+                if (!isRespawning)
+                {
+                    isRespawning = true;
+                    GameManager.Instance.OnPlayerDefeated();
+                    SpawnDefeatEffect();
+
+                }
+            }
+        }
     }
 
     protected override void Spawn()
@@ -91,9 +109,9 @@ public class PlayerTankController : BaseTankController, IInitializable
         bool shoot = false;
 
 #if ENABLE_LEGACY_INPUT_MANAGER
-        if (Input.GetKeyDown(KeyCode.Space)) shoot = true;
+        if (Input.GetMouseButtonDown(0)) shoot = true;
 #elif ENABLE_INPUT_SYSTEM
-        if (Keyboard.current.spaceKey.wasPressedThisFrame) shoot = true;
+        if (Mouse.current.leftButton.wasPressedThisFrame) shoot = true;
 #endif
 
         if (shoot) Shoot();
@@ -114,5 +132,6 @@ public class PlayerTankController : BaseTankController, IInitializable
             GameManager.Instance.OnPlayerDefeated();
             SpawnDefeatEffect();
         }
+
     }
 }

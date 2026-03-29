@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
         string json = JsonUtility.ToJson(state);
         string savePath = Application.persistentDataPath + "/save.json";
         System.IO.File.WriteAllText(savePath, json);
+        playerTank.SetActive(false);
         UIManager.Instance.ShowMainUI();
     }
 
@@ -210,6 +211,12 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.SetPlayerLives(playerLives);
         UIManager.Instance.SetKilledCount(botsKilled);
     }
+
+    public void ContinuePlay()
+    {
+        UIManager.Instance.DisableUI();
+    }
+
 
     public void OnBotDefeated()
     {
